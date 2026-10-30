@@ -1,27 +1,33 @@
+/* Look inspired by the E377 slide deck: white pages, plain black titles,
+   bright green accent, green corner shapes and round green number badges. */
 :root {
   --bg: #ffffff;
-  --surface: #f3f6fa;
-  --text: #1c2430;
-  --muted: #55627a;
-  --accent: #0b6e99;
-  --accent-text: #ffffff;
-  --border: #d5dde8;
-  --code-bg: #111827;
-  --code-text: #e5e7eb;
-  --tip-bg: #e8f4fb;
+  --surface: #f4f8ee;
+  --text: #1a1a1a;
+  --muted: #555555;
+  --green: #6eaf1d;          /* shapes and borders */
+  --green-strong: #3d7a0a;   /* text and badges, readable on white */
+  --on-strong: #ffffff;
+  --border: #d9dfd0;
+  --code-bg: #f6f8f2;
+  --code-text: #1a1a1a;
+  --code-border: #d9dfd0;
+  --tip-bg: #eef6e2;
 }
 
 :root[data-theme="dark"] {
-  --bg: #0f1520;
-  --surface: #1a2332;
-  --text: #e8edf4;
-  --muted: #a3b0c4;
-  --accent: #5cc0e8;
-  --accent-text: #0f1520;
-  --border: #2b384d;
-  --code-bg: #05080d;
-  --code-text: #e5e7eb;
-  --tip-bg: #16303f;
+  --bg: #111611;
+  --surface: #1a221a;
+  --text: #ececec;
+  --muted: #a9b3a5;
+  --green: #6eaf1d;
+  --green-strong: #9ad94a;
+  --on-strong: #10210a;
+  --border: #2d392b;
+  --code-bg: #0b0f0b;
+  --code-text: #e8eee4;
+  --code-border: #2d392b;
+  --tip-bg: #1b2a14;
 }
 
 * { box-sizing: border-box; }
@@ -32,8 +38,8 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--text);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  line-height: 1.65;
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  line-height: 1.6;
   font-size: 1.05rem;
 }
 
@@ -45,7 +51,7 @@ body {
   top: 0;
   z-index: 10;
   background: var(--bg);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 3px solid var(--green);
 }
 .topbar .wrap {
   display: flex;
@@ -64,58 +70,102 @@ body {
 .topbar nav a {
   white-space: nowrap;
   padding: 0.35rem 0.7rem;
-  border-radius: 999px;
+  border-radius: 4px;
   color: var(--text);
   text-decoration: none;
   font-size: 0.9rem;
 }
-.topbar nav a:hover, .topbar nav a:focus-visible { background: var(--surface); }
+.topbar nav a:hover, .topbar nav a:focus-visible { background: var(--surface); color: var(--green-strong); }
 
 button, summary { font: inherit; }
 
 #theme-toggle {
   flex-shrink: 0;
-  border: 1px solid var(--border);
-  background: var(--surface);
+  border: 2px solid var(--green);
+  background: var(--bg);
   color: var(--text);
   border-radius: 999px;
-  padding: 0.35rem 0.9rem;
+  padding: 0.3rem 0.9rem;
   cursor: pointer;
 }
 
-:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+:focus-visible { outline: 3px solid var(--green-strong); outline-offset: 2px; }
 
-/* header */
-header.hero { padding: 2.5rem 0 1.5rem; }
-header.hero h1 { font-size: clamp(1.8rem, 5vw, 2.8rem); line-height: 1.2; margin: 0 0 0.5rem; }
+/* title page */
+header.hero {
+  position: relative;
+  margin-top: 1rem;
+  padding: 3.5rem 1rem 2rem 4.5rem;
+  overflow: hidden;
+}
+header.hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 3.5rem;
+  height: 3.5rem;
+  background: var(--green);
+  border-bottom-right-radius: 100%;
+}
+header.hero h1 { font-size: clamp(1.9rem, 5vw, 3rem); line-height: 1.2; margin: 0 0 0.75rem; font-weight: 400; }
 header.hero p { color: var(--muted); margin: 0.25rem 0; }
-.goals { background: var(--surface); border-radius: 12px; padding: 1rem 1.25rem; margin-top: 1.25rem; }
+header.hero p strong { color: var(--text); }
+.goals { background: var(--surface); border-left: 5px solid var(--green); padding: 1rem 1.25rem; margin-top: 1.5rem; }
 .goals h2 { margin: 0 0 0.25rem; font-size: 1.1rem; }
 .goals ul { margin: 0; padding-left: 1.25rem; }
 
-/* lessons */
-section.lesson { padding: 2rem 0; border-top: 1px solid var(--border); }
-section.lesson h2 { font-size: clamp(1.4rem, 3.5vw, 1.8rem); line-height: 1.25; margin: 0 0 0.75rem; }
+/* lessons: each one looks like a slide */
+section.lesson {
+  position: relative;
+  margin: 1.5rem 0;
+  padding: 1.5rem 1.25rem 3rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+/* green corner shape, like the slide number corner */
+section.lesson::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--green);
+  border-top-left-radius: 100%;
+}
+section.lesson h2 {
+  font-size: clamp(1.4rem, 3.5vw, 1.8rem);
+  line-height: 1.25;
+  margin: 0 0 0.75rem;
+  font-weight: 400;
+}
+section.lesson h3 { font-size: 1.15rem; margin: 1.25rem 0 0.5rem; }
 .num {
   display: inline-block;
   min-width: 2rem;
   text-align: center;
-  margin-right: 0.5rem;
-  padding: 0 0.4rem;
-  border-radius: 8px;
-  background: var(--accent);
-  color: var(--accent-text);
+  margin-right: 0.6rem;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  background: var(--green-strong);
+  color: var(--on-strong);
+  font-size: 0.85em;
+  font-weight: 700;
+  vertical-align: middle;
 }
+section.lesson.part { border: none; border-left: 5px solid var(--green); border-radius: 0; background: var(--surface); padding-bottom: 1.5rem; }
+section.lesson.part::after { display: none; }
 
-img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); }
+img { max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 4px; background: #fff; }
 figure { margin: 1rem 0; }
 figcaption { color: var(--muted); font-size: 0.9rem; margin-top: 0.35rem; }
 .img-small { max-width: min(100%, 28rem); }
 
 .tip, .note {
   background: var(--tip-bg);
-  border-left: 4px solid var(--accent);
-  border-radius: 6px;
+  border-left: 5px solid var(--green);
   padding: 0.6rem 1rem;
   margin: 1rem 0;
 }
@@ -127,7 +177,7 @@ dl.terms dd { margin: 0 0 0 1rem; color: var(--muted); }
 
 table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.95rem; }
 th, td { text-align: left; padding: 0.5rem 0.6rem; border-bottom: 1px solid var(--border); vertical-align: top; }
-th { background: var(--surface); }
+th { background: var(--green-strong); color: var(--on-strong); }
 .table-scroll { overflow-x: auto; }
 
 /* code */
@@ -136,7 +186,8 @@ th { background: var(--surface); }
   margin: 0;
   background: var(--code-bg);
   color: var(--code-text);
-  border-radius: 10px;
+  border: 1px solid var(--code-border);
+  border-left: 5px solid var(--green);
   padding: 2.4rem 1rem 1rem;
   overflow-x: auto;
   font-size: 0.9rem;
@@ -146,10 +197,10 @@ th { background: var(--surface); }
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  border: 1px solid #4b5563;
-  background: #1f2937;
-  color: #f3f4f6;
-  border-radius: 6px;
+  border: 1px solid var(--green-strong);
+  background: var(--bg);
+  color: var(--green-strong);
+  border-radius: 4px;
   padding: 0.2rem 0.7rem;
   font-size: 0.85rem;
   cursor: pointer;
@@ -158,24 +209,26 @@ th { background: var(--surface); }
   position: absolute;
   top: 0.6rem;
   left: 1rem;
-  color: #9ca3af;
+  color: var(--muted);
   font-size: 0.8rem;
 }
 
 /* check yourself */
-.check { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 1rem 1.25rem; margin-top: 1.5rem; }
-.check h3 { margin: 0 0 0.5rem; font-size: 1.05rem; }
+.check { background: var(--surface); border: 1px solid var(--green); padding: 1rem 1.25rem; margin-top: 1.5rem; }
+section.lesson .check h3 { margin: 0 0 0.5rem; font-size: 1.05rem; color: var(--green-strong); }
 .check ul { list-style: none; padding: 0; margin: 0.5rem 0; }
 .check li { margin: 0.35rem 0; }
 .check details { margin-top: 0.5rem; }
-.check summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+.check summary { cursor: pointer; color: var(--green-strong); font-weight: 700; }
 .check details p { margin: 0.5rem 0 0; }
 
-footer { border-top: 1px solid var(--border); padding: 1.5rem 0 3rem; color: var(--muted); font-size: 0.9rem; }
+footer { border-top: 3px solid var(--green); padding: 1.5rem 0 3rem; color: var(--muted); font-size: 0.9rem; }
 
 @media (max-width: 600px) {
   body { font-size: 1rem; }
   .topbar .wrap { gap: 0.4rem; }
+  header.hero { padding-left: 1rem; padding-top: 4.5rem; }
+  section.lesson { padding: 1.25rem 0.9rem 3rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
