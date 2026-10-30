@@ -234,3 +234,34 @@ footer { border-top: 3px solid var(--green); padding: 1.5rem 0 3rem; color: var(
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
 }
+
+/* start page and part switching */
+.choices { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); margin: 1.5rem 0 2rem; }
+.choice {
+  position: relative;
+  display: block;
+  padding: 1.25rem 1.25rem 3.5rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  text-decoration: none;
+  overflow: hidden;
+}
+.choice::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--green);
+  border-top-left-radius: 100%;
+}
+.choice:hover, .choice:focus-visible { border-color: var(--green); background: var(--surface); }
+.choice h2 { font-size: 1.4rem; font-weight: 400; margin: 0.5rem 0; }
+.choice p { margin: 0 0 0.75rem; }
+.choice .go { color: var(--green-strong); font-weight: 700; }
+
+.pager { margin: 2rem 0; }
+.pager a { display: inline-block; padding: 0.6rem 1.1rem; border: 2px solid var(--green); border-radius: 999px; color: var(--green-strong); font-weight: 700; text-decoration: none; }
+.pager a:hover, .pager a:focus-visible { background: var(--surface); }
