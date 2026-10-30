@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Fundamentals of Arduino</title>
+  <title>Arduino and Machine Vision</title>
   <meta name="description" content="A beginner-friendly mini-course: learn Arduino, write your first loop, and build LED and button circuits in Tinkercad.">
   <link rel="stylesheet" href="css/style.css">
 </head>
@@ -27,6 +27,9 @@
       <a href="#button">Button + LED</a>
       <a href="#summary">Summary</a>
       <a href="#robot">Robot car</a>
+      <a href="#part2">Part 2: Machine vision</a>
+      <a href="#cv-run">Run on Pi</a>
+      <a href="#cv-yolo">YOLO</a>
     </nav>
     <button id="theme-toggle" type="button" aria-pressed="false">Dark theme</button>
   </div>
@@ -35,9 +38,9 @@
 <main class="wrap">
 
 <header class="hero">
-  <h1>Fundamentals of Arduino</h1>
-  <p>E377 – Mechatronics System and Design</p>
-  <p>No coding experience needed. You will learn to read and write a simple program, including a <strong>loop</strong>, and build circuits in Tinkercad.</p>
+  <h1>Arduino and Machine Vision</h1>
+  <p>Part 1: Fundamentals of Arduino (E377 – Mechatronics System and Design) · Part 2: Computer vision with a Raspberry Pi</p>
+  <p>No coding experience needed. You will learn to read and write a simple program, including a <strong>loop</strong>, build circuits in Tinkercad, then teach a camera to tell a good apple from a bad apple.</p>
   <div class="goals">
     <h2>By the end you can</h2>
     <ul>
@@ -46,6 +49,7 @@
       <li>Read a circuit diagram and build it on a breadboard.</li>
       <li>Tell the sections of a program apart and say what each one does.</li>
       <li>Write a program that uses a switch to control an LED.</li>
+      <li>Train an image model and run it on a Raspberry Pi camera, and explain what YOLO adds.</li>
     </ul>
   </div>
 </header>
@@ -365,6 +369,338 @@ void loop()
     </table>
   </div>
   <p>Tinkercad Circuits has an ultrasonic sensor, DC motors and an L293D motor driver, so you can try the whole design before buying parts.</p>
+</section>
+
+
+<!-- ========== PART 2 ========== -->
+<section class="lesson part" id="part2">
+  <h2>Part 2: Teach a camera to see</h2>
+  <p>Now you will use a <strong>Raspberry Pi 4 with a camera</strong> and a bit of AI. By the end, the camera will tell a <strong>good apple</strong> from a <strong>bad apple</strong>. The program is built around a loop again, just like the blinking LED.</p>
+</section>
+
+<!-- 15 -->
+<section class="lesson" id="cv-what">
+  <h2><span class="num">15</span>What is computer vision?</h2>
+  <p><strong>Computer vision</strong> is a part of artificial intelligence (AI) that lets a computer understand pictures and video, the way you understand what your eyes see.</p>
+  <p>It is already used to find diseases in scans, recognise faces, spot defects on a factory line and help cars see the road. There are four common jobs:</p>
+  <figure>
+    <img src="images/cv-tasks.jpg" alt="Four examples on pictures of cats and dogs: classification, classification with location, object detection, and segmentation" width="1000" height="410">
+    <figcaption>From left to right: classification, classification plus location, object detection, segmentation.</figcaption>
+  </figure>
+  <ul>
+    <li><strong>Classification:</strong> "What is in this picture?" One answer for the whole picture. <em>We use this for the apples.</em></li>
+    <li><strong>Object detection:</strong> "What is here, and where?" It draws boxes. <em>We meet this with YOLO later.</em></li>
+    <li><strong>Segmentation:</strong> "Which pixels belong to which object?"</li>
+  </ul>
+  <div class="check">
+    <h3>Check yourself</h3>
+    <p>A camera on a conveyor belt only needs to say "good" or "bad" for each apple. Is that classification or detection?</p>
+    <details><summary>Show answer</summary><p>Classification. One label per picture, and no box is needed.</p></details>
+  </div>
+</section>
+
+<!-- 16 -->
+<section class="lesson" id="cv-ai">
+  <h2><span class="num">16</span>AI, machine learning and deep learning</h2>
+  <figure>
+    <img src="images/cv-ai-ml-dl.jpg" alt="Timeline showing artificial intelligence as the biggest idea, machine learning inside it, and deep learning inside machine learning" width="1000" height="527">
+    <figcaption>Each idea sits inside the one before it.</figcaption>
+  </figure>
+  <dl class="terms">
+    <dt>Artificial intelligence (AI)</dt>
+    <dd>Any computer program that does something we think of as smart.</dd>
+    <dt>Machine learning</dt>
+    <dd>The computer learns patterns from examples instead of following rules a person wrote by hand.</dd>
+    <dt>Deep learning</dt>
+    <dd>Machine learning that uses neural networks with many layers. It works especially well on pictures when there is plenty of data.</dd>
+    <dt>Model</dt>
+    <dd>What you get after learning: a file that takes a picture in and gives an answer out.</dd>
+  </dl>
+</section>
+
+<!-- 17 -->
+<section class="lesson" id="cv-pi">
+  <h2><span class="num">17</span>The Raspberry Pi and its camera</h2>
+  <p>The Raspberry Pi is a low-cost computer about the size of a credit card. Unlike an Arduino, it runs a full operating system, so you can run Python, open windows and use a camera.</p>
+  <figure>
+    <img class="img-small" src="images/raspberry-pi-4.jpg" alt="A Raspberry Pi 4 board with labels for USB-C power, micro HDMI ports, USB ports and Ethernet" width="1000" height="583">
+    <figcaption>Raspberry Pi 4.</figcaption>
+  </figure>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>You need</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td>Raspberry Pi 4 with power supply</td><td>The computer.</td></tr>
+        <tr><td>microSD card with the operating system</td><td>The Pi's storage. Install it with the free Raspberry Pi Imager program.</td></tr>
+        <tr><td>Monitor, keyboard and mouse</td><td>To use it like a normal computer.</td></tr>
+        <tr><td>USB camera</td><td>Plug it into a USB port. Your slides use a USB camera.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tip"><p><strong>Arduino vs Raspberry Pi:</strong> the Arduino is great at simple, reliable jobs such as reading a button or driving a motor. The Pi is better at heavy thinking such as recognising pictures. A robot can use both: the Pi decides, and the Arduino acts.</p></div>
+</section>
+
+<!-- 18 -->
+<section class="lesson" id="cv-loop">
+  <h2><span class="num">18</span>Camera loop with Python and OpenCV</h2>
+  <p><strong>OpenCV</strong> is a free library of ready-made tools for working with pictures. A library is code that other people wrote so you do not have to. We use it with the <strong>Python</strong> language.</p>
+  <p>Open the Terminal on the Pi and prepare a workspace. Type these one at a time.</p>
+  <div class="code">
+    <span class="label">Terminal</span>
+    <button class="copy" type="button">Copy</button>
+<pre><code>python3 -m venv ~/cv-env
+source ~/cv-env/bin/activate
+pip install opencv-python numpy</code></pre>
+  </div>
+  <p>The first line makes a private box (a <em>virtual environment</em>) for this project's tools. The second one switches it on. The third installs OpenCV and NumPy.</p>
+  <p>Now the camera loop. Save it as <code>camera.py</code> and run it with <code>python3 camera.py</code>.</p>
+  <div class="code">
+    <span class="label">Python</span>
+    <button class="copy" type="button">Copy</button>
+<pre><code>import cv2
+
+cap = cv2.VideoCapture(0)       # open camera number 0
+
+while True:                     # repeat forever, like loop() on Arduino
+    ok, frame = cap.read()      # take one picture (a "frame")
+    if not ok:                  # camera problem: stop
+        break
+
+    cv2.imshow("Camera", frame) # show the picture in a window
+
+    if cv2.waitKey(1) == ord("q"):   # press the q key to quit
+        break
+
+cap.release()                   # let go of the camera
+cv2.destroyAllWindows()         # close the window</code></pre>
+  </div>
+  <div class="note"><p><strong>Same idea, new language.</strong> A video is just many pictures, one after the other. <code>while True:</code> in Python does the same job as <code>loop()</code> on the Arduino: it repeats forever. Each time round, the program grabs a new frame. In Python, the lines that belong inside the loop are <em>indented</em> (pushed in) instead of using curly brackets.</p></div>
+  <div class="check">
+    <h3>Check yourself</h3>
+    <p>What happens each time the loop goes round?</p>
+    <details><summary>Show answer</summary><p>The program reads one new frame from the camera, shows it in the window, then checks whether you pressed q.</p></details>
+  </div>
+</section>
+
+<!-- 19 -->
+<section class="lesson" id="cv-classify">
+  <h2><span class="num">19</span>How a computer tells pictures apart</h2>
+  <p><strong>Image classification</strong> means giving a picture a label and a confidence score. For example: "ice bear, 97%".</p>
+  <figure>
+    <img class="img-small" src="images/cv-classification.jpg" alt="A toy polar bear labelled ice bear, polar bear with 97 percent confidence" width="459" height="440">
+    <figcaption>The model gives a label and how sure it is.</figcaption>
+  </figure>
+  <p>Inside, the model is a <strong>neural network</strong>: many tiny calculating units, loosely inspired by brain cells, connected in layers. For pictures we use a <strong>convolutional neural network (CNN)</strong>:</p>
+  <figure>
+    <img src="images/cv-cnn.jpg" alt="Diagram of a convolutional neural network: input picture, convolution and pooling layers that extract features, then a classifier giving the output" width="672" height="415">
+    <figcaption>Early layers pick out edges and shapes. The last layers decide the label.</figcaption>
+  </figure>
+  <ol>
+    <li>The first layers look for simple things, such as edges and colours.</li>
+    <li>Later layers combine them into bigger things, such as a stem or a bruise.</li>
+    <li>The last layer gives a score for each label. The highest score wins.</li>
+  </ol>
+  <p>You do not have to build this. Next, you teach one with examples.</p>
+</section>
+
+<!-- 20 -->
+<section class="lesson" id="cv-teach">
+  <h2><span class="num">20</span>Teach it: good apple vs bad apple</h2>
+  <p><strong>Teachable Machine</strong> is a free website from Google. You show it pictures from your webcam, and it trains a model in your browser. No code is needed.</p>
+  <figure>
+    <img class="img-small" src="images/teachable-machine.jpg" alt="The Teachable Machine website: a webcam panel to gather image samples, then train, then preview" width="512" height="288">
+    <figcaption>Gather, train, then preview.</figcaption>
+  </figure>
+  <ol>
+    <li>Go to <strong>teachablemachine.withgoogle.com</strong>, choose <em>Get Started</em>, then <em>Image Project</em>, then <em>Standard image model</em>.</li>
+    <li>Rename the first class <code>Good apple</code>. Hold a good apple in front of the webcam and record many samples.</li>
+    <li>Rename the second class <code>Bad apple</code>. Do the same with a bruised or rotten apple.</li>
+    <li>Add a third class <code>Nothing</code> with just the empty background, so the model learns what "no apple" looks like.</li>
+    <li>Click <em>Train Model</em>, then test it in the preview.</li>
+  </ol>
+  <div class="tip">
+    <p><strong>Tips for a better model</strong></p>
+    <ul>
+      <li>Record at least 50 samples per class.</li>
+      <li>Turn the apple around and move it closer and further away.</li>
+      <li>Use several apples, not just one.</li>
+      <li>Train in the same light and background where you will use it.</li>
+    </ul>
+  </div>
+  <div class="check">
+    <h3>Check yourself</h3>
+    <p>Your model calls everything a "bad apple". Name one thing you could do to fix it.</p>
+    <details><summary>Show answer</summary><p>Add more and varied samples of good apples (different angles and lighting), and make sure each class has a similar number of samples.</p></details>
+  </div>
+</section>
+
+<!-- 21 -->
+<section class="lesson" id="cv-run">
+  <h2><span class="num">21</span>Run your model on the Raspberry Pi</h2>
+  <p>Now move your trained model from the browser onto the Pi.</p>
+  <ol>
+    <li>In Teachable Machine click <em>Export Model</em>, open the <strong>TensorFlow Lite</strong> tab, choose <strong>Floating point</strong>, and click <em>Download my model</em>.</li>
+    <li>Unzip the download. You should see a <code>.tflite</code> model file and <code>labels.txt</code>. Copy both into one folder on the Pi, for example <code>~/apples</code>.</li>
+    <li>Install the TensorFlow Lite runtime, a small program that runs models, in the same terminal as before:</li>
+  </ol>
+  <div class="code">
+    <span class="label">Terminal</span>
+    <button class="copy" type="button">Copy</button>
+<pre><code>pip install tflite-runtime</code></pre>
+  </div>
+  <p>If that line fails on your Pi, use <code>pip install tensorflow</code> instead. The program below works with either.</p>
+  <p>Save this as <code>apples.py</code> in the same folder. <strong>If your model file has a different name, change <code>MODEL</code>.</strong></p>
+  <div class="code">
+    <span class="label">Python</span>
+    <button class="copy" type="button">Copy</button>
+<pre><code>import cv2
+import numpy as np
+
+try:
+    from tflite_runtime.interpreter import Interpreter
+except ImportError:
+    from tensorflow.lite.python.interpreter import Interpreter
+
+MODEL = "model_unquant.tflite"   # your model file
+LABELS = "labels.txt"            # your label list
+
+# --- set up (runs once) ---
+labels = [line.strip().split(" ", 1)[1] for line in open(LABELS)]
+interpreter = Interpreter(model_path=MODEL)
+interpreter.allocate_tensors()
+inp = interpreter.get_input_details()[0]
+out = interpreter.get_output_details()[0]
+size = inp["shape"][1]           # the picture size the model expects
+
+cap = cv2.VideoCapture(0)
+
+# --- main loop (repeats forever) ---
+while True:
+    ok, frame = cap.read()
+    if not ok:
+        break
+
+    # get the frame ready for the model
+    img = cv2.cvtColor(cv2.resize(frame, (size, size)), cv2.COLOR_BGR2RGB)
+    if inp["dtype"] == np.float32:
+        img = img.astype(np.float32) / 127.5 - 1   # scale to -1 .. 1
+    img = np.expand_dims(img, axis=0)
+
+    # ask the model
+    interpreter.set_tensor(inp["index"], img)
+    interpreter.invoke()
+    scores = interpreter.get_tensor(out["index"])[0]
+    if out["dtype"] == np.uint8:
+        scores = scores / 255.0
+
+    best = int(np.argmax(scores))    # the label with the highest score
+    text = f"{labels[best]} {scores[best]:.0%}"
+    print(text)
+
+    cv2.putText(frame, text, (10, 35), cv2.FONT_HERSHEY_SIMPLEX,
+                1, (0, 255, 0), 2)
+    cv2.imshow("Apple checker", frame)
+
+    if cv2.waitKey(1) == ord("q"):
+        break
+
+cap.release()
+cv2.destroyAllWindows()</code></pre>
+  </div>
+  <p>Run it with <code>python3 apples.py</code>. Hold an apple up to the camera, and the label and confidence appear on the video.</p>
+  <figure>
+    <img class="img-small" src="images/pi-classify-result.jpg" alt="A Raspberry Pi window showing a hand held up to the camera, with the label paper 0.97 written at the top" width="637" height="554">
+    <figcaption>A classifier running on a Pi. This example recognises paper, scissors and stone.</figcaption>
+  </figure>
+  <p>Read the program in the same three parts as the Arduino one: <em>declaration</em> (imports and file names), <em>set up</em> (load the model, once), and the <em>loop</em> (grab a frame, ask the model, show the answer, repeat).</p>
+  <div class="check">
+    <h3>Check yourself</h3>
+    <ul>
+      <li>Which line makes the program repeat?</li>
+      <li>Which line picks the answer with the highest score?</li>
+    </ul>
+    <details><summary>Show answers</summary><p><code>while True:</code> makes it repeat. <code>np.argmax(scores)</code> finds the best label.</p></details>
+  </div>
+  <div class="tip"><p><strong>Challenge:</strong> change the program so that it prints "REJECT" when the label is "Bad apple" and the confidence is above 80%. That is the first step towards a machine that sorts apples.</p></div>
+</section>
+
+<!-- 22 -->
+<section class="lesson" id="cv-yolo">
+  <h2><span class="num">22</span>Beyond one label: object detection and YOLO</h2>
+  <p>Classification gives <em>one</em> answer per picture. But a street photo has cars, people and traffic lights, all at once. <strong>Object detection</strong> finds every object and draws a <strong>box</strong> around it, with a label.</p>
+  <figure>
+    <img src="images/cv-detection.jpg" alt="A busy street with coloured boxes around cars, a person, a bicycle and a traffic light, each with a label" width="872" height="586">
+    <figcaption>Object detection: many objects, each with a box and a label.</figcaption>
+  </figure>
+  <h3>YOLO: "You Only Look Once"</h3>
+  <p><strong>YOLO</strong> is a very popular object detection model. Older methods looked at a picture many times to hunt for objects. YOLO looks <em>once</em>, so it is fast enough for live video. That is why it is used for robots, cars and cameras that need to react quickly.</p>
+  <figure>
+    <img class="img-small" src="images/yolo-road.jpg" alt="Dashcam view of a road with boxes around cars and a truck, each with a confidence score" width="480" height="360">
+    <figcaption>YOLO on a road scene: each box has a label and a confidence score.</figcaption>
+  </figure>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th></th><th>Classification (Teachable Machine)</th><th>Detection (YOLO)</th></tr></thead>
+      <tbody>
+        <tr><td>Answer</td><td>One label per picture</td><td>Many labels, each with a box</td></tr>
+        <tr><td>Knows where?</td><td>No</td><td>Yes</td></tr>
+        <tr><td>Good for</td><td>Good or bad apple on a belt</td><td>Counting apples, finding one in a crate</td></tr>
+        <tr><td>Training effort</td><td>Low: show it examples</td><td>Higher: you must draw boxes on many pictures</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <p><strong>Try it (optional, not from your slides).</strong> On a computer or Pi with Python, a ready-made YOLO model can be tried in two commands. It downloads a model that already knows 80 everyday objects, such as people, cars, cups and apples. On a Raspberry Pi it may run slowly, so expect only a few frames per second. I have not tested this on your Pi.</p>
+  </div>
+  <div class="code">
+    <span class="label">Terminal</span>
+    <button class="copy" type="button">Copy</button>
+<pre><code>pip install ultralytics
+yolo predict model=yolov8n.pt source=0 show=True</code></pre>
+  </div>
+  <p><code>source=0</code> means "use camera number 0". Press <kbd>q</kbd> in the window to stop.</p>
+  <div class="check">
+    <h3>Check yourself</h3>
+    <p>You want a robot to count how many apples are in a box. Classification or YOLO?</p>
+    <details><summary>Show answer</summary><p>YOLO (object detection). It finds every apple separately, so you can count the boxes.</p></details>
+  </div>
+</section>
+
+<!-- 23 -->
+<section class="lesson" id="cv-edge">
+  <h2><span class="num">23</span>Edge or cloud?</h2>
+  <p>Where does the thinking happen? <strong>Cloud computing</strong> sends the picture over the internet to a big computer far away. <strong>Edge computing</strong> does the work on the spot, close to the camera, like your Raspberry Pi.</p>
+  <figure>
+    <img src="images/edge-vs-cloud.jpg" alt="Cloud computing on the left, where devices connect to a distant cloud; edge computing on the right, where computation happens near the devices" width="1000" height="634">
+    <figcaption>Cloud (left) and edge (right).</figcaption>
+  </figure>
+  <p>Running AI on a small device is called <strong>Edge AI</strong>. The apple checker is Edge AI. Why choose the edge?</p>
+  <ul>
+    <li><strong>Fast.</strong> No waiting for the internet. A self-driving car cannot wait.</li>
+    <li><strong>Works offline.</strong> No connection needed.</li>
+    <li><strong>Private.</strong> Pictures stay on the device.</li>
+    <li><strong>Cheaper.</strong> Less data to send.</li>
+  </ul>
+  <p>The trade-off: a small device is less powerful, so models must be small. That is why we exported a <strong>TensorFlow Lite</strong> model, a slimmed-down version made for small devices.</p>
+</section>
+
+<!-- 24 -->
+<section class="lesson" id="cv-summary">
+  <h2><span class="num">24</span>Part 2 summary</h2>
+  <ul>
+    <li>Computer vision lets computers understand pictures. Classification gives one label per picture. Detection finds objects and their position.</li>
+    <li>Machine learning learns from examples. A <em>model</em> is the result.</li>
+    <li>A camera program is a loop: grab a frame, process it, show or act on the result, repeat.</li>
+    <li>With Teachable Machine you can train an image classifier in minutes and run it on a Raspberry Pi.</li>
+    <li>YOLO is a fast object detector that finds many objects in one look.</li>
+    <li>Edge AI runs the model on the device itself.</li>
+  </ul>
+  <div class="check">
+    <h3>Reflection</h3>
+    <p>What is the difference between machine learning and deep learning for pictures?</p>
+    <details><summary>Show answer</summary><p>In classic machine learning, people design the features to look for by hand. In deep learning, the neural network learns the features by itself from many examples.</p></details>
+  </div>
+  <div class="tip"><p><strong>Put it together:</strong> the Pi looks at the apple and decides good or bad. It tells an Arduino, which turns on an LED or moves a motor to sort the apple. That is a real mechatronic system.</p></div>
 </section>
 
 </main>

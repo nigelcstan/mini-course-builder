@@ -110,7 +110,7 @@ section.lesson h2 { font-size: clamp(1.4rem, 3.5vw, 1.8rem); line-height: 1.25; 
 img { max-width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--border); }
 figure { margin: 1rem 0; }
 figcaption { color: var(--muted); font-size: 0.9rem; margin-top: 0.35rem; }
-.img-small { max-width: 28rem; }
+.img-small { max-width: min(100%, 28rem); }
 
 .tip, .note {
   background: var(--tip-bg);
