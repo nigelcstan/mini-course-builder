@@ -7,8 +7,10 @@
 
 ## Project Structure
 
-The project is nearly empty for now.
-
+- `index.html`: the single scrolling course page with all lessons.
+- `css/style.css`: styles and light/dark theme colours.
+- `js/main.js`: theme toggle and code copy buttons.
+- `images/`: pictures taken from the course slides.
 - `README.md`: project title.
 - `CLAUDE.md`: this file.
 

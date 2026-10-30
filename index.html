@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fundamentals of Arduino</title>
+  <meta name="description" content="A beginner-friendly mini-course: learn Arduino, write your first loop, and build LED and button circuits in Tinkercad.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <nav aria-label="Lessons">
+      <a href="#what">What is Arduino?</a>
+      <a href="#why">Why Arduino?</a>
+      <a href="#board">The board</a>
+      <a href="#structure">Program structure</a>
+      <a href="#constants">Constants</a>
+      <a href="#variables">Variables</a>
+      <a href="#difference">Constant vs variable</a>
+      <a href="#pinmode">pinMode</a>
+      <a href="#write">digitalWrite</a>
+      <a href="#read">digitalRead</a>
+      <a href="#led">LED circuit</a>
+      <a href="#blink">Blink (loop)</a>
+      <a href="#button">Button + LED</a>
+      <a href="#summary">Summary</a>
+      <a href="#robot">Robot car</a>
+    </nav>
+    <button id="theme-toggle" type="button" aria-pressed="false">Dark theme</button>
+  </div>
+</div>
+
+<main class="wrap">
+
+<header class="hero">
+  <h1>Fundamentals of Arduino</h1>
+  <p>E377 – Mechatronics System and Design</p>
+  <p>No coding experience needed. You will learn to read and write a simple program, including a <strong>loop</strong>, and build circuits in Tinkercad.</p>
+  <div class="goals">
+    <h2>By the end you can</h2>
+    <ul>
+      <li>Name the main parts of an Arduino board.</li>
+      <li>Explain how a switch and an LED work, including "active high" and "active low".</li>
+      <li>Read a circuit diagram and build it on a breadboard.</li>
+      <li>Tell the sections of a program apart and say what each one does.</li>
+      <li>Write a program that uses a switch to control an LED.</li>
+    </ul>
+  </div>
+</header>
+
+<!-- 1 -->
+<section class="lesson" id="what">
+  <h2><span class="num">1</span>What is Arduino?</h2>
+  <p>Arduino is a small, open-source electronics board. You write instructions on your computer, send them to the board, and the board follows them to control lights, motors, sensors and more.</p>
+  <figure>
+    <img class="img-small" src="images/arduino-uno.jpg" alt="An Arduino Uno board, blue, with a USB socket on the left and rows of pin sockets along the top and bottom" width="450" height="315">
+    <figcaption>The Arduino Uno board.</figcaption>
+  </figure>
+  <dl class="terms">
+    <dt>Open-source</dt>
+    <dd>The designs are shared freely, so anyone can use, copy and improve them.</dd>
+    <dt>Microcontroller</dt>
+    <dd>A tiny computer on one chip. The Uno has an Atmel AVR microcontroller. It does one job: run your program.</dd>
+    <dt>IDE (Integrated Development Environment)</dt>
+    <dd>The program on your computer where you write your code and upload it to the board.</dd>
+  </dl>
+</section>
+
+<!-- 2 -->
+<section class="lesson" id="why">
+  <h2><span class="num">2</span>Why use Arduino?</h2>
+  <ul>
+    <li><strong>Inexpensive.</strong> Cheaper than most other microcontroller boards.</li>
+    <li><strong>Works on any computer.</strong> Windows, Mac and Linux.</li>
+    <li><strong>Easy to use.</strong> Good for beginners, and powerful enough for experts.</li>
+    <li><strong>Open and extendable.</strong> Free code libraries are available, written in the C++ language, and you can add extra modules.</li>
+  </ul>
+</section>
+
+<!-- 3 -->
+<section class="lesson" id="board">
+  <h2><span class="num">3</span>Parts of the board</h2>
+  <p>You do not need to memorise these now. Come back to this table when you build a circuit.</p>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Part</th><th>What it does</th></tr></thead>
+      <tbody>
+        <tr><td>USB jack</td><td>Connects to your computer with a USB cable.</td></tr>
+        <tr><td>Power jack</td><td>Lets you power the board from an external power supply.</td></tr>
+        <tr><td>Reset button / reset pin</td><td>Starts your program again from the beginning.</td></tr>
+        <tr><td>3.3V and 5V</td><td>Power outputs for your parts.</td></tr>
+        <tr><td>GND (ground)</td><td>The "0 volts" connection. Circuits need it to complete the loop.</td></tr>
+        <tr><td>Vin</td><td>Another way to power the board from an external source.</td></tr>
+        <tr><td>D0 to D13</td><td>Digital pins. Each can be an input or an output.</td></tr>
+        <tr><td>A0 to A5</td><td>Analog input pins.</td></tr>
+        <tr><td>D0 (RX)</td><td>Receives signals.</td></tr>
+        <tr><td>D1 (TX)</td><td>Transmits signals.</td></tr>
+        <tr><td>Analog Reference</td><td>Sets an outside reference voltage.</td></tr>
+        <tr><td>In-circuit serial programming</td><td>An extra way to program the board.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="tip"><p><strong>Digital vs analog:</strong> a digital pin knows only two states, ON (HIGH) or OFF (LOW). An analog pin can read a range of values in between.</p></div>
+</section>
+
+<!-- 4 -->
+<section class="lesson" id="structure">
+  <h2><span class="num">4</span>How a program is structured</h2>
+  <p>Every Arduino program has three parts, in this order:</p>
+  <ol>
+    <li><strong>Declaration.</strong> Give a name to each device connected to the board and say which pin it uses. Also name any values you will store.</li>
+    <li><strong>Initialization (runs once).</strong> Runs one time when the program starts. Set each device as an input or an output. This part is the <code>setup()</code> function.</li>
+    <li><strong>Main program (loops).</strong> Runs the same instructions again and again, forever. This is the <code>loop()</code> function.</li>
+  </ol>
+  <div class="note"><p><strong>This is your first loop.</strong> A <em>loop</em> repeats instructions over and over. Arduino's <code>loop()</code> never stops while the board has power. That is why a robot can keep checking its sensors.</p></div>
+  <dl class="terms">
+    <dt>Function</dt>
+    <dd>A named block of instructions. Curly brackets <code>{ }</code> mark where it starts and ends.</dd>
+  </dl>
+</section>
+
+<!-- 5 -->
+<section class="lesson" id="constants">
+  <h2><span class="num">5</span>Constants: names that never change</h2>
+  <p>Give every connected device a name so your code is easy to read. Here is a pushbutton:</p>
+  <div class="code">
+    <span class="label">Arduino (C++)</span>
+    <button class="copy" type="button">Copy</button>
+<pre><code>const int buttonPin = 2;</code></pre>
+  </div>
+  <p>Read it one word at a time:</p>
+  <ul>
+    <li><code>buttonPin</code> is the name we chose for the pushbutton.</li>
+    <li><code>2</code> means the button is connected to digital pin D2.</li>
+    <li><code>int</code> means the value is an <strong>integer</strong> (a whole number).</li>
+    <li><code>const</code> means <strong>constant</strong>. The value is fixed and cannot change.</li>
+  </ul>
+  <div class="check">
+    <h3>Check yourself</h3>
+    <p>In <code>const int ledPin = 8;</code>, which pin is the LED connected to?</p>
+    <details><summary>Show answer</summary><p>Digital pin 8. The name <code>ledPin</code> is just a label we picked.</p></details>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="lesson" id="variables">
+  <h2><span class="num">6</span>Variables: names that can change</h2>
+  <p>A <strong>variable</strong> is like a labelled box in the board's memory. You can put a value in it and change that value later.</p>
+  <div class="code">
+    <span class="label">Arduino (C++)</span>
+    <button class="copy" type="button">Copy</button>
+<pre><code>int buttonState = 0;</code></pre>
+  </div>
+  <ul>
+    <li><code>buttonState</code> is the name of the box.</li>
+    <li><code>int</code> means it stores whole numbers only.</li>
+    <li><code>= 0</code> means it starts with the value 0.</li>
+  </ul>
+</section>
+
+<!-- 7 -->
+<section class="lesson" id="difference">
+  <h2><span class="num">7</span>Constant or variable?</h2>
+  <p>Look at the two lines side by side:</p>
+  <div class="code">
+    <span class="label">Arduino (C++)</span>
+    <button class="copy" type="button">Copy</button>
+<pre><code>const int buttonPin = 2;   // fixed: the button always stays on pin 2
+int buttonState = 0;       // not fixed: changes when the button is pressed</code></pre>
+  </div>
+  <p>The only difference is the word <code>const</code>. Use a constant for things that never change, like a pin number. Use a variable for things that change, like the button's state.</p>
+  <div class="check">
+    <h3>Check yourself</h3>
+    <p>You want to store how many times a button was pressed. Constant or variable?</p>
+    <details><summary>Show answer</summary><p>A variable, because the count changes each time.</p></details>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="lesson" id="pinmode">
+  <h2><span class="num">8</span>pinMode: input or output?</h2>
+  <p>Before using a pin, tell the board which way information flows:</p>
+  <ul>
+    <li><strong>OUTPUT:</strong> the board sends a signal out, for example to an LED.</li>
+    <li><strong>INPUT:</strong> the board listens for a signal, for example from a button.</li>
+  </ul>
+  <div class="code">
+    <span class="label">Arduino (C++)</span>
+    <button class="copy" type="button">Copy</button>
+<pre><code>void setup()
+{
+  pinMode(ledPin, OUTPUT);     // the LED is an output
+  pinMode(buttonPin, INPUT);   // the pushbutton is an input
+}</code></pre>
+  </div>
+  <p>These go inside <code>setup()</code>, so they run once at the start.</p>
+</section>
+
+<!-- 9 -->
+<section class="lesson" id="write">
+  <h2><span class="num">9</span>digitalWrite: turn things on and off</h2>
+  <p><code>digitalWrite</code> sends a <strong>HIGH</strong> (on) or <strong>LOW</strong> (off) signal to an output device.</p>
+  <div class="code">
+    <span class="label">Arduino (C++)</span>
+    <button class="copy" type="button">Copy</button>
+<pre><code>digitalWrite(ledPin, HIGH);   // turn the LED on</code></pre>
+  </div>
+  <p>The first item in the brackets is the device's name. The second is the state to write.</p>
+</section>
+
+<!-- 10 -->
+<section class="lesson" id="read">
+  <h2><span class="num">10</span>digitalRead: find out the state of a button</h2>
+  <p><code>digitalRead</code> checks an input device and tells you whether it is HIGH or LOW. Save the answer in a variable so you can use it.</p>
+  <div class="code">
+    <span class="label">Arduino (C++)</span>
+    <button class="copy" type="button">Copy</button>
+<pre><code>buttonState = digitalRead(buttonPin);</code></pre>
+  </div>
+  <p>This reads the button on <code>buttonPin</code> and stores the result in <code>buttonState</code>.</p>
+  <div class="check">
+    <h3>Check yourself</h3>
+    <p>Which one sends a signal out, <code>digitalWrite</code> or <code>digitalRead</code>?</p>
+    <details><summary>Show answer</summary><p><code>digitalWrite</code>. <code>digitalRead</code> listens.</p></details>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="lesson" id="led">
+  <h2><span class="num">11</span>The LED circuit</h2>
+  <p>An LED (Light Emitting Diode) is a small light. In this circuit it is <strong>active high</strong>: write HIGH to turn it on, write LOW to turn it off.</p>
+  <figure>
+    <img src="images/led-circuit.png" alt="Circuit diagram: Arduino digital pin 8 connects through a resistor R1 to the positive leg of LED1, and the negative leg connects back to GND" width="917" height="458">
+    <figcaption>Digital pin 8, through resistor R1, to the LED. The other leg returns to GND.</figcaption>
+  </figure>
+  <p>The resistor protects the LED from too much current. Do not leave it out.</p>
+  <p>Build it in Tinkercad Circuits like this:</p>
+  <figure>
+    <img class="img-small" src="images/tinkercad-led.png" alt="Tinkercad breadboard with an LED and a resistor wired to an Arduino Uno" width="794" height="621">
+    <figcaption>The LED circuit in Tinkercad.</figcaption>
+  </figure>
+  <div class="check">
+    <h3>Check yourself</h3>
+    <ul>
+      <li>What does the resistor do?</li>
+      <li>In an active high LED circuit, which state turns the LED on?</li>
+    </ul>
+    <details><summary>Show answers</summary><p>The resistor limits the current to protect the LED. HIGH turns it on.</p></details>
+  </div>
+</section>
+
+<!-- 12 -->
+<section class="lesson" id="blink">
+  <h2><span class="num">12</span>Blink an LED: your first loop</h2>
+  <p>Put everything together. Copy this code into the Tinkercad code editor, then press <em>Start Simulation</em>.</p>
+  <div class="code">
+    <span class="label">Arduino (C++)</span>
+    <button class="copy" type="button">Copy</button>
+<pre><code>const int ledPin = 8;       // LED connected to digital pin 8
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);  // LED is an output
+}
+
+void loop()
+{
+  digitalWrite(ledPin, HIGH);  // LED on
+  delay(3000);                 // wait 3 seconds
+  digitalWrite(ledPin, LOW);   // LED off
+  delay(3000);                 // wait 3 seconds
+}</code></pre>
+  </div>
+  <p><code>delay(3000)</code> pauses for 3000 milliseconds, which is 3 seconds. When <code>loop()</code> reaches the last line, it starts again from the top. That is why the LED blinks forever.</p>
+  <div class="tip"><p><strong>Try it:</strong> change both 3000s to 500. What happens? Now make the LED stay on for 1 second and off for 3 seconds.</p></div>
+  <div class="check">
+    <h3>Check yourself</h3>
+    <p>Which part of the code runs only once, and which part repeats?</p>
+    <details><summary>Show answer</summary><p><code>setup()</code> runs once. <code>loop()</code> repeats forever.</p></details>
+  </div>
+</section>
+
+<!-- 13 -->
+<section class="lesson" id="button">
+  <h2><span class="num">13</span>A button controls the LED</h2>
+  <p>A pushbutton is an input device. It sends HIGH or LOW to the board. In this circuit the button is <strong>active high</strong>:</p>
+  <ul>
+    <li>Button pressed: HIGH is sent, so the LED turns on.</li>
+    <li>Button not pressed: LOW is sent, so the LED turns off.</li>
+  </ul>
+  <figure>
+    <img src="images/button-circuit.png" alt="Circuit diagram connecting a pushbutton to digital pin 2 and an LED to digital pin 8 of an Arduino" width="914" height="470">
+    <figcaption>Button on pin 2, LED on pin 8.</figcaption>
+  </figure>
+  <figure>
+    <img class="img-small" src="images/tinkercad-button.png" alt="Tinkercad breadboard with a pushbutton, an LED and two resistors wired to an Arduino Uno" width="769" height="627">
+    <figcaption>The same circuit in Tinkercad.</figcaption>
+  </figure>
+  <div class="code">
+    <span class="label">Arduino (C++)</span>
+    <button class="copy" type="button">Copy</button>
+<pre><code>const int buttonPin = 2;   // pushbutton on digital pin 2
+const int ledPin = 8;      // LED on digital pin 8
+
+int buttonState = 0;       // stores the button's state, starts at 0
+
+void setup()
+{
+  pinMode(buttonPin, INPUT);   // button is an input
+  pinMode(ledPin, OUTPUT);     // LED is an output
+}
+
+void loop()
+{
+  buttonState = digitalRead(buttonPin);   // read the button
+
+  if (buttonState == HIGH)                // pressed?
+  {
+    digitalWrite(ledPin, HIGH);           // LED on
+  }
+  else                                    // not pressed
+  {
+    digitalWrite(ledPin, LOW);            // LED off
+  }
+}</code></pre>
+  </div>
+  <p><code>if</code> / <code>else</code> lets the program choose. <em>If</em> the button is HIGH, do the first thing. <em>Otherwise</em>, do the second. Because it sits inside <code>loop()</code>, the board checks the button again and again, many times a second.</p>
+  <div class="check">
+    <h3>Check yourself</h3>
+    <p>What happens if you change <code>HIGH</code> to <code>LOW</code> in the line <code>digitalWrite(ledPin, HIGH);</code> inside the <code>if</code>?</p>
+    <details><summary>Show answer</summary><p>The LED would turn off when the button is pressed, and on when it is not. The behaviour flips.</p></details>
+  </div>
+</section>
+
+<!-- 14 -->
+<section class="lesson" id="summary">
+  <h2><span class="num">14</span>What you can now do</h2>
+  <ul>
+    <li>Identify the parts of the board.</li>
+    <li>Explain how an active high switch and LED work.</li>
+    <li>Read a circuit diagram of an LED and a button, and build it on a breadboard.</li>
+    <li>Name the sections of a program: declaration, setup, loop.</li>
+    <li>Program a switch to control an LED.</li>
+  </ul>
+  <p>Not all of these are easy the first time. Run the examples again and change one thing at a time.</p>
+</section>
+
+<!-- extra -->
+<section class="lesson" id="robot">
+  <h2><span class="num">+</span>Next: parts for a robot car</h2>
+  <p><em>This section is not from your slides. It is a suggested next step.</em> A robot car uses the same <code>loop()</code> idea: keep checking a sensor, then react.</p>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Part</th><th>What it is for</th></tr></thead>
+      <tbody>
+        <tr><td>Ultrasonic distance sensor (HC-SR04)</td><td>Measures how far away an object is, so the car can stop before it hits a wall.</td></tr>
+        <tr><td>Motor driver (L293D or L298N)</td><td>The Arduino pin cannot power a motor directly. The driver does it for the board.</td></tr>
+        <tr><td>2 DC gear motors with wheels</td><td>Drive the car.</td></tr>
+        <tr><td>Chassis and caster wheel</td><td>The body of the car.</td></tr>
+        <tr><td>Battery pack</td><td>Powers the motors separately from the board.</td></tr>
+        <tr><td>Breadboard and jumper wires</td><td>Connect everything without soldering.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Tinkercad Circuits has an ultrasonic sensor, DC motors and an L293D motor driver, so you can try the whole design before buying parts.</p>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">Fundamentals of Arduino · E377 Mechatronics System and Design</div>
+</footer>
+
+<script src="js/main.js"></script>
+</body>
+</html>
