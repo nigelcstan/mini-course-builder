@@ -382,10 +382,10 @@ void loop()
 <section class="lesson" id="cv-what">
   <h2><span class="num">15</span>What is computer vision?</h2>
   <p><strong>Computer vision</strong> is a part of artificial intelligence (AI) that lets a computer understand pictures and video, the way you understand what your eyes see.</p>
-  <p>It is already used to find diseases in scans, recognise faces, spot defects on a factory line and help cars see the road. There are four common jobs:</p>
+  <p>It is already used to find diseases in scans, recognise faces, spot defects on a factory line and help cars see the road. There are three common jobs:</p>
   <figure>
-    <img src="images/cv-tasks.jpg" alt="Four examples on pictures of cats and dogs: classification, classification with location, object detection, and segmentation" width="1000" height="410">
-    <figcaption>From left to right: classification, classification plus location, object detection, segmentation.</figcaption>
+    <img src="images/cv-tasks.svg" alt="Three computer vision jobs on apples: classification gives one label, detection draws boxes, segmentation colours each apple" width="950" height="285">
+    <figcaption>Classification, detection and segmentation, shown on apples.</figcaption>
   </figure>
   <ul>
     <li><strong>Classification:</strong> "What is in this picture?" One answer for the whole picture. <em>We use this for the apples.</em></li>
@@ -403,7 +403,7 @@ void loop()
 <section class="lesson" id="cv-ai">
   <h2><span class="num">16</span>AI, machine learning and deep learning</h2>
   <figure>
-    <img src="images/cv-ai-ml-dl.jpg" alt="Timeline showing artificial intelligence as the biggest idea, machine learning inside it, and deep learning inside machine learning" width="1000" height="527">
+    <img src="images/cv-ai-ml-dl.svg" alt="Three nested circles: deep learning inside machine learning inside artificial intelligence" width="660" height="410">
     <figcaption>Each idea sits inside the one before it.</figcaption>
   </figure>
   <dl class="terms">
@@ -423,7 +423,7 @@ void loop()
   <h2><span class="num">17</span>The Raspberry Pi and its camera</h2>
   <p>The Raspberry Pi is a low-cost computer about the size of a credit card. Unlike an Arduino, it runs a full operating system, so you can run Python, open windows and use a camera.</p>
   <figure>
-    <img class="img-small" src="images/raspberry-pi-4.jpg" alt="A Raspberry Pi 4 board with labels for USB-C power, micro HDMI ports, USB ports and Ethernet" width="1000" height="583">
+    <img class="img-small" src="images/raspberry-pi-4.svg" alt="Simplified drawing of a Raspberry Pi 4 showing the processor, USB ports, Ethernet port, HDMI ports and power socket" width="620" height="400">
     <figcaption>Raspberry Pi 4.</figcaption>
   </figure>
   <div class="table-scroll">
@@ -485,14 +485,14 @@ cv2.destroyAllWindows()         # close the window</code></pre>
 <!-- 19 -->
 <section class="lesson" id="cv-classify">
   <h2><span class="num">19</span>How a computer tells pictures apart</h2>
-  <p><strong>Image classification</strong> means giving a picture a label and a confidence score. For example: "ice bear, 97%".</p>
+  <p><strong>Image classification</strong> means giving a picture a label and a confidence score. For example: "Good apple, 97%".</p>
   <figure>
-    <img class="img-small" src="images/cv-classification.jpg" alt="A toy polar bear labelled ice bear, polar bear with 97 percent confidence" width="459" height="440">
-    <figcaption>The model gives a label and how sure it is.</figcaption>
+    <img class="img-small" src="images/cv-classification.svg" alt="A red apple with the result Good apple 97 percent" width="440" height="420">
+    <figcaption>The model gives a label and how sure it is. (Try it later with cats and dogs too.)</figcaption>
   </figure>
   <p>Inside, the model is a <strong>neural network</strong>: many tiny calculating units, loosely inspired by brain cells, connected in layers. For pictures we use a <strong>convolutional neural network (CNN)</strong>:</p>
   <figure>
-    <img src="images/cv-cnn.jpg" alt="Diagram of a convolutional neural network: input picture, convolution and pooling layers that extract features, then a classifier giving the output" width="672" height="415">
+    <img src="images/cv-cnn.svg" alt="Simplified neural network: an apple picture passes through layers that find edges, shapes and parts, then a classifier gives a label and score" width="660" height="385">
     <figcaption>Early layers pick out edges and shapes. The last layers decide the label.</figcaption>
   </figure>
   <ol>
@@ -508,7 +508,7 @@ cv2.destroyAllWindows()         # close the window</code></pre>
   <h2><span class="num">20</span>Teach it: good apple vs bad apple</h2>
   <p><strong>Teachable Machine</strong> is a free website from Google. You show it pictures from your webcam, and it trains a model in your browser. No code is needed.</p>
   <figure>
-    <img class="img-small" src="images/teachable-machine.jpg" alt="The Teachable Machine website: a webcam panel to gather image samples, then train, then preview" width="512" height="288">
+    <img class="img-small" src="images/teachable-machine.svg" alt="Three steps to train an image model: gather photos, train, then preview" width="900" height="275">
     <figcaption>Gather, train, then preview.</figcaption>
   </figure>
   <ol>
@@ -609,8 +609,8 @@ cv2.destroyAllWindows()</code></pre>
   </div>
   <p>Run it with <code>python3 apples.py</code>. Hold an apple up to the camera, and the label and confidence appear on the video.</p>
   <figure>
-    <img class="img-small" src="images/pi-classify-result.jpg" alt="A Raspberry Pi window showing a hand held up to the camera, with the label paper 0.97 written at the top" width="637" height="554">
-    <figcaption>A classifier running on a Pi. This example recognises paper, scissors and stone.</figcaption>
+    <img class="img-small" src="images/pi-classify-result.svg" alt="A program window showing a red apple with the text Good apple 97 percent" width="440" height="370">
+    <figcaption>What your apple checker window should look like.</figcaption>
   </figure>
   <p>Read the program in the same three parts as the Arduino one: <em>declaration</em> (imports and file names), <em>set up</em> (load the model, once), and the <em>loop</em> (grab a frame, ask the model, show the answer, repeat).</p>
   <div class="check">
@@ -627,16 +627,16 @@ cv2.destroyAllWindows()</code></pre>
 <!-- 22 -->
 <section class="lesson" id="cv-yolo">
   <h2><span class="num">22</span>Beyond one label: object detection and YOLO</h2>
-  <p>Classification gives <em>one</em> answer per picture. But a street photo has cars, people and traffic lights, all at once. <strong>Object detection</strong> finds every object and draws a <strong>box</strong> around it, with a label.</p>
+  <p>Classification gives <em>one</em> answer per picture. But a crate holds many apples, some good and some bad, all at once. <strong>Object detection</strong> finds every object and draws a <strong>box</strong> around it, with a label.</p>
   <figure>
-    <img src="images/cv-detection.jpg" alt="A busy street with coloured boxes around cars, a person, a bicycle and a traffic light, each with a label" width="872" height="586">
-    <figcaption>Object detection: many objects, each with a box and a label.</figcaption>
+    <img src="images/cv-detection.svg" alt="A crate of apples with a box around each apple labelled good or bad" width="600" height="370">
+    <figcaption>Object detection: every apple gets its own box and label.</figcaption>
   </figure>
   <h3>YOLO: "You Only Look Once"</h3>
-  <p><strong>YOLO</strong> is a very popular object detection model. Older methods looked at a picture many times to hunt for objects. YOLO looks <em>once</em>, so it is fast enough for live video. That is why it is used for robots, cars and cameras that need to react quickly.</p>
+  <p><strong>YOLO</strong> is a very popular object detection model. Older methods looked at a picture many times to hunt for objects. YOLO looks <em>once</em>, so it is fast enough for live video. That is why it is used for robots, cars and cameras that need to react quickly. It works on cats, dogs, cars and people as well as apples.</p>
   <figure>
-    <img class="img-small" src="images/yolo-road.jpg" alt="Dashcam view of a road with boxes around cars and a truck, each with a confidence score" width="480" height="360">
-    <figcaption>YOLO on a road scene: each box has a label and a confidence score.</figcaption>
+    <img class="img-small" src="images/yolo-grid.svg" alt="A picture split into a grid, with YOLO finding a good apple and a bad apple in one pass" width="660" height="345">
+    <figcaption>YOLO looks at the whole picture once and returns every box, label and score.</figcaption>
   </figure>
   <div class="table-scroll">
     <table>
@@ -671,7 +671,7 @@ yolo predict model=yolov8n.pt source=0 show=True</code></pre>
   <h2><span class="num">23</span>Edge or cloud?</h2>
   <p>Where does the thinking happen? <strong>Cloud computing</strong> sends the picture over the internet to a big computer far away. <strong>Edge computing</strong> does the work on the spot, close to the camera, like your Raspberry Pi.</p>
   <figure>
-    <img src="images/edge-vs-cloud.jpg" alt="Cloud computing on the left, where devices connect to a distant cloud; edge computing on the right, where computation happens near the devices" width="1000" height="634">
+    <img src="images/edge-vs-cloud.svg" alt="Cloud computing sends pictures far away to a big computer, while edge computing checks them on the device itself" width="700" height="345">
     <figcaption>Cloud (left) and edge (right).</figcaption>
   </figure>
   <p>Running AI on a small device is called <strong>Edge AI</strong>. The apple checker is Edge AI. Why choose the edge?</p>
