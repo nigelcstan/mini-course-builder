@@ -450,7 +450,7 @@ void loop()
     <button class="copy" type="button">Copy</button>
 <pre><code>python3 -m venv ~/cv-env
 source ~/cv-env/bin/activate
-pip install opencv-python numpy</code></pre>
+pip install opencv-python "numpy&lt;2"</code></pre>
   </div>
   <p>The first line makes a private box (a <em>virtual environment</em>) for this project's tools. The second one switches it on. The third installs OpenCV and NumPy.</p>
   <p>Now the camera loop. Save it as <code>camera.py</code> and run it with <code>python3 camera.py</code>.</p>
@@ -537,7 +537,7 @@ cv2.destroyAllWindows()         # close the window</code></pre>
 <!-- 21 -->
 <section class="lesson" id="cv-run">
   <h2><span class="num">21</span>Run your model on the Raspberry Pi</h2>
-  <p>Now move your trained model from the browser onto the Pi.</p>
+  <p>Now move your trained model from the browser onto the Pi. Use the Pi's own desktop (not SSH) and a <strong>USB webcam</strong>.</p>
   <ol>
     <li>In Teachable Machine click <em>Export Model</em>, open the <strong>TensorFlow Lite</strong> tab, choose <strong>Floating point</strong>, and click <em>Download my model</em>.</li>
     <li>Unzip the download. You should see a <code>.tflite</code> model file and <code>labels.txt</code>. Copy both into one folder on the Pi, for example <code>~/apples</code>.</li>
@@ -548,7 +548,7 @@ cv2.destroyAllWindows()         # close the window</code></pre>
     <button class="copy" type="button">Copy</button>
 <pre><code>pip install tflite-runtime</code></pre>
   </div>
-  <p>If that line fails on your Pi, use <code>pip install tensorflow</code> instead. The program below works with either.</p>
+  <p>If that line fails on your Pi, try <code>pip install ai-edge-litert</code> instead. The program below works with either. If you see an error like <code>numpy.core.multiarray failed to import</code>, the NumPy version is too new. Run <code>pip install "numpy&lt;2"</code> to fix it.</p>
   <p>Save this as <code>apples.py</code> in the same folder. <strong>If your model file has a different name, change <code>MODEL</code>.</strong></p>
   <div class="code">
     <span class="label">Python</span>
@@ -559,7 +559,7 @@ import numpy as np
 try:
     from tflite_runtime.interpreter import Interpreter
 except ImportError:
-    from tensorflow.lite.python.interpreter import Interpreter
+    from ai_edge_litert.interpreter import Interpreter
 
 MODEL = "model_unquant.tflite"   # your model file
 LABELS = "labels.txt"            # your label list
